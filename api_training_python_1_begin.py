@@ -1,8 +1,8 @@
 import requests
 import json
 
-thoughtspot_url = 'https://{}.thoughtspot.cloud'
-org_id = 1613534286
+thoughtspot_url = 'https://team3.thoughtspot.cloud'
+# org_id = 1613534286
 api_version = '2.0'
 base_url = '{thoughtspot_url}/api/rest/{version}/'.format(thoughtspot_url=thoughtspot_url, version=api_version)
 api_headers = {
@@ -15,11 +15,16 @@ requests_session = requests.Session()
 requests_session.headers.update(api_headers)
 
 # url is base_url + endpoint
-endpoint = ""
+endpoint = "auth/token/full"
 url = base_url + endpoint
 
 # JSON request as Python Dict
 json_post_data = {
+  "username": "charlie.birch+anz@thoughtspot.com",
+  "validity_time_in_sec": 3000,
+  "org_id": 1849672964,
+  "auto_create": False,
+  "password": "Fellowship-100!"
 }
 
 try:
@@ -32,6 +37,11 @@ try:
     resp_json = resp.json()
     # You can just print(resp_json) to see the Python Dict
     print(json.dumps(resp_json, indent=2))
+
+    token = resp_json['token']
+    api_headers['Authorization'] = 'Bearer {}'.format(token)
+    requests_session.headers.update(api_headers)
+
 except requests.exceptions.HTTPError as e:
     print("Requests")
     print(e)
@@ -42,3 +52,5 @@ except requests.exceptions.HTTPError as e:
     print(e.response.content)
 
 print(resp_json["token"])
+
+
